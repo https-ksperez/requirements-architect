@@ -1,8 +1,8 @@
-"""
-Configuration for the extraction review application.
+"""Configuration for the Requirements Architect application.
 
 Configuration is loaded from configs/config.json via ResourceConfig.
-The unified config contains both extraction settings and the JSON schema.
+The unified config contains both extraction settings and the JSON schema that defines
+the structured outputs to review (e.g., user stories, use cases, and related metadata).
 """
 
 import hashlib
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # The name of the collection to use for storing extracted data.
 # When developing locally, this will use the _public collection (shared within the project),
 # otherwise agent data is isolated to each agent.
-EXTRACTED_DATA_COLLECTION: str = "brd-technical-specs"
+EXTRACTED_DATA_COLLECTION: str = "requirements-artifacts"
 
 
 class ExtractSettings(BaseModel):

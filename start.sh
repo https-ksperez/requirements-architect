@@ -3,7 +3,7 @@
 # This script configures necessary environment variables and starts the server
 
 echo "=================================="
-echo "Data Extraction and Ingestion"
+echo "Requirements Architect (User Stories & Use Cases)"
 echo "=================================="
 echo ""
 

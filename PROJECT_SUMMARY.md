@@ -1,32 +1,41 @@
-# Data Extraction and Ingestion - Project Summary
+# Requirements Architect (User Stories & Use Cases) - Project Summary
 
 ## What problem does this agent solve?
 
 ### Context
 
-In many organizations, there is a large volume of unstructured documents (PDFs, Word documents, images, etc.) containing valuable information that is difficult to process automatically. Manual data extraction from these documents is:
+In many teams, requirements are captured in unstructured documents (PDFs, Word docs, meeting notes, emails, images, etc.). Turning those raw requirements into *usable engineering artifacts*—especially **user stories** and **use cases**—is often harder than writing the code itself.
+
+Even strong developers can struggle with:
+
+- **Identifying the right stories**: Separating features, constraints, and non-goals
+- **Writing consistent story formats**: Roles, goals, and value vary by author
+- **Deriving use cases and flows**: Actors, preconditions, main/alternate flows, exceptions
+- **Keeping traceability**: Linking extracted items back to the original source
+
+When done manually, this work is:
 
 - **Slow**: Requires human review document by document
-- **Error-prone**: Manual transcription introduces inconsistencies
-- **Not scalable**: Document volume grows faster than human capacity
-- **Expensive**: Consumes valuable time from qualified personnel
+- **Inconsistent**: Different engineers produce different outputs from the same input
+- **Hard to scale**: Document volume grows faster than the team’s analysis capacity
+- **Costly**: Consumes time from engineers and product stakeholders
 
 ### Solution
 
-This agent automates the process of **extracting structured data from unstructured documents**, providing:
+This agent helps teams move from raw requirement sources to structured, reviewable outputs by automating **requirements extraction and structuring**. It provides:
 
-1. **Automated Extraction**: Uses AI models (LlamaIndex + LlamaCloud) to extract specific information based on customizable schemas
-2. **Human Validation**: Review interface for experts to validate and correct extractions
-3. **Flexible Schemas**: Configuration via JSON Schema to adapt to any document type
-4. **Organized Storage**: Validated data is saved in structured collections ready for downstream use
+1. **Automated Structuring**: Uses LlamaIndex Workflows + LlamaCloud extraction to map unstructured text into a structured schema (e.g., user stories, use cases, acceptance criteria, metadata)
+2. **Human-in-the-loop Review**: A UI where engineers can review, edit, and approve the generated artifacts
+3. **Schema-driven Outputs**: JSON Schema controls *what* is extracted so teams can tailor it (stories vs. use cases vs. technical constraints)
+4. **Organized Storage**: Approved results are saved as structured records, ready for backlog grooming, export, or downstream tooling
 
 ### Use Cases
 
-- **Technical Requirements Analysis**: Extraction of specifications from engineering documents
-- **Contract Processing**: Identification of clauses, dates, amounts
-- **Document Management**: Classification and metadata extraction
-- **Audits**: Systematic collection of information from regulatory documents
-- **Research**: Data extraction from academic papers or reports
+- **Requirements → Backlog Seed**: Generate first-pass user stories and acceptance criteria from requirement documents
+- **Use Case Discovery**: Identify actors, flows, and exceptions from narrative specs
+- **Engineering Onboarding**: Help junior engineers learn how to translate requirements into structured stories
+- **Consistency & Standardization**: Enforce a shared story/use-case format via schemas
+- **Traceable Reviews**: Keep a reviewable audit trail of what was extracted and how it was corrected
 
 ## How was it built?
 
@@ -41,11 +50,13 @@ This agent automates the process of **extracting structured data from unstructur
 - **jsonref**: JSON Schema reference resolution
 
 #### Frontend
-- **React 18**: Framework for user interface
+- **React 19**: Framework for user interface
 - **TypeScript**: Type safety in the frontend
 - **Vite**: Modern and fast build tool
 - **Tailwind CSS**: Utility-first styles
-- **shadcn/ui**: Accessible and customizable UI components
+- **Radix UI Themes**: UI primitives and theming
+- **shadcn/ui**: Component scaffolding and conventions
+- **@llamaindex/ui**: LlamaIndex UI components used by the review experience
 
 #### Deployment
 - **LlamaAgents (llamactl)**: Agent orchestration and deployment
@@ -56,7 +67,7 @@ This agent automates the process of **extracting structured data from unstructur
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    Cliente (Browser)                     │
+│                      Client (Browser)                    │
 │                    React + TypeScript                    │
 └────────────────────┬────────────────────────────────────┘
                      │ HTTP/REST
@@ -80,24 +91,24 @@ This agent automates the process of **extracting structured data from unstructur
       └──────────────────┘  └──────────────────┘
 ```
 
-### Componentes Principales
+### Core Components
 
 #### 1. **MetadataWorkflow** ([metadata_workflow.py](src/extraction_review/metadata_workflow.py))
-- Proporciona el schema JSON al frontend
-- Configura el nombre de la colección de datos
-- Permite que la UI se adapte dinámicamente al schema
+- Provides the JSON Schema to the frontend
+- Supplies configuration like collection names
+- Enables the UI to adapt dynamically to the active schema
 
 #### 2. **ProcessFileWorkflow** ([process_file.py](src/extraction_review/process_file.py))
-- **Paso 1**: Descarga el archivo desde LlamaCloud
-- **Paso 2**: Inicia el job de extracción con el schema configurado
-- **Paso 3**: Espera y obtiene los resultados
-- **Paso 4**: Guarda los datos extraídos en Agent Data
-- **Paso 5**: Reporta progreso mediante eventos
+- **Step 1**: Download the file from LlamaCloud
+- **Step 2**: Start an extraction job using the configured schema
+- **Step 3**: Wait for completion and retrieve results
+- **Step 4**: Persist extracted records into Agent Data
+- **Step 5**: Stream progress via workflow events
 
-#### 3. **Frontend Dinámico** ([ui/src](ui/src))
-- **MetadataProvider**: Obtiene schema y configuración
-- **HomePage**: Lista de archivos procesados
-- **ItemPage**: Editor dinámico basado en schema
+#### 3. **Schema-driven Review UI** ([ui/src](ui/src))
+- **MetadataProvider**: Fetches schema and configuration
+- **HomePage**: Lists processed items/files
+- **ItemPage**: Schema-driven editor for review and correction
 - Automatically generates forms from JSON Schema
 
 ### Development Process
@@ -122,8 +133,8 @@ This agent automates the process of **extracting structured data from unstructur
 #### Phase 4: Integration and Testing
 1. **E2E Testing**: Tests with Playwright
 2. **Type Checking**: TypeScript + ty for Python
-3. **Linting**: Ruff for Python, ESLint for TypeScript
-4. **CI/CD**: Automated scripts with hatch
+3. **Linting/Formatting**: Ruff (Python) + Prettier (UI) + TypeScript checks via `tsc`
+4. **Automation**: Hatch scripts for common checks (format/lint/test)
 
 #### Phase 5: Deployment and Documentation
 1. **Startup scripts**: Automation for Windows/Linux/Mac
@@ -176,8 +187,8 @@ This agent automates the process of **extracting structured data from unstructur
 
 ### Code Quality
 - ✅ Type checking (Python: ty, TypeScript: tsc)
-- ✅ Linting (Ruff, ESLint)
-- ✅ Automated testing (pytest, vitest, playwright)
+- ✅ Linting/formatting (Ruff, Prettier)
+- ✅ Automated testing (pytest, pytest-playwright)
 - ✅ Complete documentation
 
 ### Developer Experience
@@ -205,11 +216,11 @@ This agent automates the process of **extracting structured data from unstructur
 
 This project demonstrates:
 - **Effective integration** of multiple technologies (LlamaIndex, React, LlamaCloud)
-- **Flexible design** that adapts to different use cases through configuration
+- **Flexible design** that adapts to different requirement schemas through configuration
 - **Attention to detail** in UX, documentation, and error handling
-- **Practical solution** to a real document automation problem
+- **Practical workflow** for turning raw requirements into reviewable engineering artifacts
 
-The result is a production-ready tool that significantly reduces the time and effort required to extract structured data from unstructured documents, while maintaining the human oversight necessary to ensure quality.
+The result is a tool that reduces the time and friction of identifying user stories and use cases from unstructured requirement sources, while keeping human oversight as the final quality gate.
 
 ## References
 

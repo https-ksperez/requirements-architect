@@ -1,6 +1,6 @@
-# Deployment Guide - Data Extraction and Ingestion
+# Deployment Guide - Requirements Architect
 
-This guide provides detailed instructions for deploying the data extraction application in different environments.
+This guide provides detailed instructions for deploying the Requirements Architect application in different environments.
 
 ## Table of Contents
 
@@ -164,7 +164,7 @@ Create `/etc/systemd/system/extraction-review.service`:
 
 ```ini
 [Unit]
-Description=Data Extraction Review Service
+Description=Requirements Review Service
 After=network.target
 
 [Service]

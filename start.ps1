@@ -2,7 +2,7 @@
 # This script configures necessary environment variables and starts the server
 
 Write-Host "==================================" -ForegroundColor Cyan
-Write-Host "Data Extraction and Ingestion" -ForegroundColor Cyan
+Write-Host "Requirements Architect (User Stories & Use Cases)" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 

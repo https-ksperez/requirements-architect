@@ -1,18 +1,18 @@
-# Data Extraction and Ingestion
+# Requirements Architect (User Stories & Use Cases)
 
-This is a LlamaAgents-based application for extracting structured data from documents. The system uses LlamaIndex and LlamaCloud to process files, extract structured information based on customizable schemas, and provide a review interface for validation and approval.
+This is a LlamaAgents-based application that helps teams turn unstructured requirement sources into structured, reviewable engineering artifacts (e.g., **user stories**, **use cases**, and acceptance criteria). It uses LlamaIndex Workflows and LlamaCloud to process documents, extract structured information based on customizable schemas, and provide a human-in-the-loop review interface.
 
 ## About This Project
 
 ### What problem does this agent solve?
 
-This application solves the challenge of extracting structured data from unstructured documents at scale. It automates the process of:
+This application solves the challenge of turning unstructured requirements into consistent, structured outputs at scale. It automates the process of:
 - Uploading and processing documents of various formats
 - Extracting specific fields based on custom JSON schemas
 - Providing a review interface for human validation
 - Storing validated extractions for downstream use
 
-The system is particularly useful for requirements analysis, technical specifications extraction, and any scenario where structured data needs to be extracted from documents while maintaining human oversight.
+The system is particularly useful for requirements analysis and for generating a first-pass backlog (stories/use cases) while maintaining human oversight.
 
 ### How it was built
 

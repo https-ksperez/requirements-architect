@@ -3,27 +3,67 @@
     "json_schema": {
       "type": "object",
       "properties": {
-        "document_type": {
-          "type": "string",
-          "description": "An overarching category for the type of document (e.g. invoice, purchase order, etc.)"
+        "document_title": {
+          "type": ["string", "null"],
+          "description": "The title or name of the Business Requirement Document"
         },
-        "summary": {
-          "type": "string",
-          "description": "A 2-3 sentence summary describing the content of the document"
+        "project_name": {
+          "type": ["string", "null"],
+          "description": "The name of the project or initiative this BRD relates to"
         },
-        "key_points": {
+        "features": {
+          "type": "array",
+          "description": "List of feature specifications extracted from the BRD",
+          "items": {
+            "type": "object",
+            "properties": {
+              "feature_id": {
+                "type": "string",
+                "description": "A unique identifier for the feature (e.g., AUTH-001, PAY-002). Generate one if not explicitly stated."
+              },
+              "user_story": {
+                "type": "string",
+                "description": "The user story in format: As a [role], I want to [action], so that [benefit]"
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["High", "Medium", "Low"],
+                "description": "Priority level of the feature based on business criticality"
+              },
+              "acceptance_criteria": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Specific, testable conditions that must be met for the feature to be considered complete"
+              },
+              "dependencies": {
+                "type": ["string", "null"],
+                "description": "Other features, systems, or prerequisites this feature depends on"
+              },
+              "technical_risks": {
+                "type": ["string", "null"],
+                "description": "Potential technical challenges, risks, or concerns for implementation"
+              }
+            },
+            "required": ["feature_id", "user_story", "priority", "acceptance_criteria", "dependencies", "technical_risks"]
+          }
+        },
+        "stakeholders": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "A list of key points or insights from the document"
+          "description": "Key stakeholders or roles mentioned in the document"
+        },
+        "timeline_notes": {
+          "type": ["string", "null"],
+          "description": "Any timeline, deadline, or milestone information mentioned"
         }
       },
-      "required": ["document_type", "summary", "key_points"]
+      "required": ["document_title", "project_name", "features", "stakeholders", "timeline_notes"]
     },
     "settings": {
       "extraction_mode": "PREMIUM",
-      "system_prompt": null,
+      "system_prompt": "You are a Senior Technical Product Owner analyzing Business Requirement Documents. Extract precise technical specifications, identify user stories in proper format (As a [role], I want to [action], so that [benefit]), and identify edge cases and acceptance criteria. Generate feature IDs using a prefix based on the feature domain (e.g., AUTH for authentication, PAY for payment, USR for user management) followed by a sequential number.",
       "citation_bbox": true,
-      "use_reasoning": false,
+      "use_reasoning": true,
       "cite_sources": true,
       "confidence_scores": true
     }
